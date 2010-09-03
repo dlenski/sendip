@@ -16,7 +16,7 @@ BuildRoot: /var/tmp/sendip-root
 %description
 A command line tool to send arbitrary IP packets. It has a large number of
 command line options to specify the content of every header of a NTP, BGP,
-RIP, RIPng, TCP, UDP, ICMP, or raw IPv4 or IPv6 packet.  It also allows any 
+RIP, RIPng, TCP, UDP, ICMP, or raw IPv4 or IPv6 packet.  It also allows any
 data to be added to the packet.
 
 %changelog
@@ -30,7 +30,7 @@ data to be added to the packet.
 - See CHANGES for a more complete list (there's even more than last time)
 
 * Sun Feb 24 2002 Calum Selkirk <cselkirk@panix.com>
-- changed /usr/share/man to %{_mandir} and added perl to edit Makefile 
+- changed /usr/share/man to %{_mandir} and added perl to edit Makefile
   to refect this
 - wrapped %discription to tw=78
 - rm buildroot before install
