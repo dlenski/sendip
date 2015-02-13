@@ -1,10 +1,9 @@
-Content-type: text/html
 
 <HTML><HEAD><TITLE>Manpage of SENDIP</TITLE>
 </HEAD><BODY>
 <H1>SENDIP</H1>
-Section: FSF (1)<BR>Updated: September 2010<BR><A HREF="#index">Index</A>
-<A HREF="http://localhost/cgi-bin/man/man2html">Return to Main Contents</A><HR>
+Section: FSF (1)<BR>Updated: February 2015<BR><A HREF="#index">Index</A>
+<A HREF="/man/man2html">Return to Main Contents</A><HR>
 
 <A NAME="lbAB">&nbsp;</A>
 <H2>NAME</H2>
@@ -15,7 +14,7 @@ sendip - Send arbitrary IP packets
 
 <B>sendip</B>
 
-[<I>-v</I>] [<I>-d data</I>] [<I>-h</I>] [<I>-f datafile</I>] [<I>-p module</I>] [<I>module options</I>] <I>hostname</I>
+[<I>-v</I>] [<I>-l loopcount</I>] [<I>-t time</I>] [<I>-d data</I>] [<I>-h</I>] [<I>-f datafile</I>] [<I>-p module</I>] [<I>module options</I>] <I>hostname</I>
 <A NAME="lbAD">&nbsp;</A>
 <H2>OPTIONS</H2>
 
@@ -26,8 +25,12 @@ add this data as a string to the end of the packet
 read packet data from file
 <DT><B>-h</B><DD>
 help (this message)
+<DT><B>-l</B> loopcount<DD>
+run loopcount times (0 means indefinitely)
 <DT><B>-p</B> module<DD>
 load the specified module (see below)
+<DT><B>-t</B> time<DD>
+wait time seconds between each loop run (0 means as fast as possible)
 <DT><B>-v</B><DD>
 be verbose
 </DL>
@@ -35,12 +38,68 @@ be verbose
 
 Packet data, and argument values for many header fields, may
 specified as
-rN to generate N random(ish) data bytes;
-zN to generate N nul (zero) data bytes;
-0x or 0X followed by hex digits;
-0 followed by octal digits;
-decimal number for decimal digits;
-any other stream of bytes, taken literally.
+<DL COMPACT>
+<DT>rN<DD>
+to generate N random(ish) data bytes;
+<DT>zN<DD>
+to generate N nul (zero) data bytes;
+<DT>fF<DD>
+to read values from file F;
+<DT>0x or 0X<DD>
+followed by hex digits;
+<DT>0<DD>
+followed by octal digits;
+<DT>1-9<DD>
+followed by decimal number for decimal digits;
+</DL>
+<P>
+
+Any other stream of bytes is taken literally.
+<P>
+
+For example, the arguments
+<DL COMPACT>
+<DT>
+<B>-p</B> ipv4 <B>-is</B> 10.1.1.r1 <B>-p</B> udp <B>-us</B> r2
+</DL>
+<P>
+
+<DD>generate a random 10.1.1.xx source address and random udp source port.
+<P>
+
+sendip may be run repeatedly by using the <B>-l</B> (loop) argument.
+Each packet sent will be identical unless random (rN) or
+file (fF) arguments are used.
+When looping, sendip will send packets as quickly as possible
+unless a time delay (-t) argument is specified.
+<P>
+
+File arguments are read line by line, with the contents of
+the line then substituted for the corresponding argument.
+For example, assume the file F contains the four lines:
+<DL COMPACT>
+<DT><DD>
+10.1.1.1
+<DT><DD>
+1000
+<DT><DD>
+10.1.1.2
+<DT><DD>
+2000
+</DL>
+<P>
+
+Then the arguments
+<DL COMPACT>
+<DT>
+<B>-l</B> 2 <B>-p</B> ipv4 <B>-id</B> fF <B>-p</B> udp <B>-ud</B> fF
+</DL>
+<P>
+
+<DD>would produce two UDP packets, one to 10.1.1.1:1000 and
+one to 10.1.1.2:2000
+When the lines in the file are exhausted, it is rewound
+and read from the beginning again.
 <P>
 
 Modules are loaded in the order the <B>-p</B> option appears.  The headers from
@@ -827,8 +886,8 @@ Default: Correct
 </DL>
 <HR>
 This document was created by
-<A HREF="http://localhost/cgi-bin/man/man2html">man2html</A>,
+<A HREF="/man/man2html">man2html</A>,
 using the manual pages.<BR>
-Time: 19:45:51 GMT, September 02, 2010
+Time: 15:51:33 GMT, February 12, 2015
 </BODY>
 </HTML>
