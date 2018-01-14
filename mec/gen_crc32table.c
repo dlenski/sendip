@@ -54,28 +54,28 @@ static void output_table(uint32_t table[], int len, const char *trans)
 
 	for (i = 0; i < len - 1; i++) {
 		if (i % ENTRIES_PER_LINE == 0)
-			printf("\n");
-		printf("%s(0x%8.8xL), ", trans, table[i]);
+			fprintf(stderr, "\n");
+		fprintf(stderr, "%s(0x%8.8xL), ", trans, table[i]);
 	}
-	printf("%s(0x%8.8xL)\n", trans, table[len - 1]);
+	fprintf(stderr, "%s(0x%8.8xL)\n", trans, table[len - 1]);
 }
 
 int main(int argc, char** argv)
 {
-	printf("/* this file is generated - do not edit */\n\n");
+	fprintf(stderr, "/* this file is generated - do not edit */\n\n");
 
 	if (CRC_LE_BITS > 1) {
 		crc32init_le();
-		printf("static const u_int32_t crc32table_le[] = {");
+		fprintf(stderr, "static const u_int32_t crc32table_le[] = {");
 		output_table(crc32table_le, LE_TABLE_SIZE, "tole");
-		printf("};\n");
+		fprintf(stderr, "};\n");
 	}
 
 	if (CRC_BE_BITS > 1) {
 		crc32init_be();
-		printf("static const u_int32_t crc32table_be[] = {");
+		fprintf(stderr, "static const u_int32_t crc32table_be[] = {");
 		output_table(crc32table_be, BE_TABLE_SIZE, "tobe");
-		printf("};\n");
+		fprintf(stderr, "};\n");
 	}
 
 	return 0;

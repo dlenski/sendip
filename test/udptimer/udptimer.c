@@ -150,7 +150,7 @@ storetime(struct in_addr *from, int delaytime)
 
 	/* from->s_addr is 32-bit address */
 #ifdef DEBUG
-	printf("store %s %d\n", 
+	fprintf(stderr, "store %s %d\n", 
 		inet_ntop(AF_INET, from,
 				dst, INET_ADDRSTRLEN), delaytime);
 #endif
@@ -210,16 +210,16 @@ printtime(Timentry **t, double *mu)
 
 		/* Dump only for debug */
 		for (n=0; n < t[m]->used; ++n) {
-		    printf(" %d", t[m]->times[n]);
+		    fprintf(stderr, " %d", t[m]->times[n]);
 		}
 #endif
 		numused += t[m]->used;
 	}
-	printf(" %d: ", numused);
+	fprintf(stderr, " %d: ", numused);
 	timestats(t, mu, &sigma, &rho);
-	printf("mu %6.4f sigma %6.4f rho %6.4f", *mu, sigma, rho);
+	fprintf(stderr, "mu %6.4f sigma %6.4f rho %6.4f", *mu, sigma, rho);
 
-	printf("\n");
+	fprintf(stderr, "\n");
 	return numused;
 }
 
@@ -244,7 +244,7 @@ printtimes(void)
 			    for (l=0; l < TABLESIZE; ++l) {
 				if (at3->p[l]) {
 				    t = at3->p[l]->t;
-				    printf("%d.%d.%d.%d:", i, j, k, l);
+				    fprintf(stderr, "%d.%d.%d.%d:", i, j, k, l);
 				    used = printtime(t, &mu);
 				    totalused += used;
 				    totalmu += mu*used;
@@ -256,7 +256,7 @@ printtimes(void)
 	    }
 	}
     }
-    printf("total entries: %d, overall average %6.4f\n",
+    fprintf(stderr, "total entries: %d, overall average %6.4f\n",
     	totalused, totalmu/totalused);
 }
 

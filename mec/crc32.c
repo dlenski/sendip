@@ -414,10 +414,10 @@ EXPORT_SYMBOL(crc32_be);
 static void
 buf_dump(char const *prefix, unsigned char const *buf, size_t len)
 {
-	fputs(prefix, stdout);
+	fputs(prefix, stderr);
 	while (len--)
-		printf(" %02x", *buf++);
-	putchar('\n');
+		fprintf(stderr, " %02x", *buf++);
+	fputc('\n', stderr);
 
 }
 #endif
@@ -469,14 +469,14 @@ static u_int32_t test_step(u_int32_t init, unsigned char *buf, size_t len)
 	store_be(crc1, buf + len);
 	crc2 = crc32_be(init, buf, len + 4);
 	if (crc2)
-		printf("\nCRC cancellation fail: 0x%08x should be 0\n",
+		fprintf(stderr, "\nCRC cancellation fail: 0x%08x should be 0\n",
 		       crc2);
 
 	for (i = 0; i <= len + 4; i++) {
 		crc2 = crc32_be(init, buf, i);
 		crc2 = crc32_be(crc2, buf + i, len + 4 - i);
 		if (crc2)
-			printf("\nCRC split fail: 0x%08x\n", crc2);
+			fprintf(stderr, "\nCRC split fail: 0x%08x\n", crc2);
 	}
 
 	/* Now swap it around for the other test */
@@ -485,22 +485,22 @@ static u_int32_t test_step(u_int32_t init, unsigned char *buf, size_t len)
 	init = bitrev32(init);
 	crc2 = bitrev32(crc1);
 	if (crc1 != bitrev32(crc2))
-		printf("\nBit reversal fail: 0x%08x -> 0x%08x -> 0x%08x\n",
+		fprintf(stderr, "\nBit reversal fail: 0x%08x -> 0x%08x -> 0x%08x\n",
 		       crc1, crc2, bitrev32(crc2));
 	crc1 = crc32_le(init, buf, len);
 	if (crc1 != crc2)
-		printf("\nCRC endianness fail: 0x%08x != 0x%08x\n", crc1,
+		fprintf(stderr, "\nCRC endianness fail: 0x%08x != 0x%08x\n", crc1,
 		       crc2);
 	crc2 = crc32_le(init, buf, len + 4);
 	if (crc2)
-		printf("\nCRC cancellation fail: 0x%08x should be 0\n",
+		fprintf(stderr, "\nCRC cancellation fail: 0x%08x should be 0\n",
 		       crc2);
 
 	for (i = 0; i <= len + 4; i++) {
 		crc2 = crc32_le(init, buf, i);
 		crc2 = crc32_le(crc2, buf + i, len + 4 - i);
 		if (crc2)
-			printf("\nCRC split fail: 0x%08x\n", crc2);
+			fprintf(stderr, "\nCRC split fail: 0x%08x\n", crc2);
 	}
 
 	return crc1;
@@ -519,8 +519,8 @@ int main(void)
 	u_int32_t crc1, crc2, crc3;
 
 	for (i = 0; i <= SIZE; i++) {
-		printf("\rTesting length %d...", i);
-		fflush(stdout);
+		fprintf(stderr, "\rTesting length %d...", i);
+		fflush(stderr);
 		random_garbage(buf1, i);
 		random_garbage(buf2, i);
 		for (j = 0; j < i; j++)
@@ -531,10 +531,10 @@ int main(void)
 		/* Now check that CRC(buf1 ^ buf2) = CRC(buf1) ^ CRC(buf2) */
 		crc3 = test_step(INIT1 ^ INIT2, buf3, i);
 		if (crc3 != (crc1 ^ crc2))
-			printf("CRC XOR fail: 0x%08x != 0x%08x ^ 0x%08x\n",
+			fprintf(stderr, "CRC XOR fail: 0x%08x != 0x%08x ^ 0x%08x\n",
 			       crc3, crc1, crc2);
 	}
-	printf("\nAll test complete.  No failures expected.\n");
+	fprintf(stderr, "\nAll test complete.  No failures expected.\n");
 	return 0;
 }
 
